@@ -1,3 +1,19 @@
+getContract <- function(x,sectype='FUT',details=FALSE,include_expired=1) {
+  options(warn=-1) # suppress warnings due to is.na
+  contract <- twsContract()
+  # https://stackoverflow.com/questions/13638377/test-for-numeric-elements-in-a-character-string
+  if(!is.na(as.numeric(x))) contract$conId <- paste(x)
+  if(is.na(as.numeric(x))) { 
+    contract$sectype = sectype
+    contract$local <- paste(x) 
+  }
+  contract$include_expired <- as.character(include_expired)
+  # if(expired==0) contract$include_expired <- "0"
+  options(warn=0)
+  if(details) return(try(reqContractDetails(tws,contract)[[1]]))
+  return(try(reqContractDetails(tws,contract)[[1]]$contract))
+}
+
 savedl <- function(Contract, endDateTime=gsub('-','',format(Sys.Date(), "%Y-%m-%d %H:%M:%S")), 
                        barSize='1 min', duration='5 D', useRTH='0', whatToShow='TRADES', Sys.sleep=0) {
   # reqHistoricalData
@@ -81,26 +97,27 @@ nacombine = function(old,new,return='newdata') {  ### ODER DATAONE??? hier only 
   return(navalues_t)
 }
 
-updatedata = function(z) {
-  zz <- paste0(substr(z,1,3),'.',substr(z,4,6))
-  contr <- all(zz, 'nodetails')
-  a <- readRDS(z)
-  data <- lapply(list(contr), function(x) {
-    dates <- finddates(x)
-    dates <- dates[as.Date(index(last(a)))<dates]
-    # temp <- lapply(dates, function(y) bidask2(x, y, Sys.sleep=0))
-    temp <- lapply(dates, function(y) bidask2nosave(x, y, Sys.sleep=0))
-    classx <- function(x) { class(x)[1] }
-    where <- which(lapply(temp, classx)!='xts')
-    print(paste('no data in list',where)) # put this in warning vector somehow
-    temp[where] <- NULL
-    temp2 <- do.call(rbind, temp) 
-    temp2 <- temp2[ ! duplicated( index(temp2) ),  ] # should not be the case
-    indexTZ(temp2) <- 'EST5EDT'
-    if(class(x)=='character') saveRDS(temp2, paste0(x,'.rds'))
-    if(class(x)!='character') saveRDS(temp2, paste0(x$local,'.rds'))
-    gc()
-    Sys.sleep(5)
-  })
+updatedata = function(filename, save=FALSE) {
+  # from file
+  values_current <- readRDS(filename)
+  filename <- unlist(strsplit(filename, '/')) # delete the folders
+  filename <- filename[length(filename)]
+  filename <- unlist(strsplit(filename, '[.]'))
+  filename <- paste0(filename[-length(filename)], collapse='.')
+  # filename <- paste0(substr(filename,1,3),'.',substr(filename,4,6))
+  contr <- getContract(filename, sectype = 'CASH', include_expired = 0)
+  dates <- finddates(contr)
+  dates <- dates[as.Date(index(last(values_current)))<dates]
+
+  temp <- lapply(dates, function(y) bidask(contr, y, Sys.sleep=0))
+  where <- which(lapply(temp, function(x) { class(x)[1] })!='xts')
+  print(paste('no data in list',where)) # put this in warning vector somehow
+  temp[where] <- NULL
+  temp2 <- do.call(rbind, temp) 
+  temp2 <- temp2[ ! duplicated( index(temp2) ),  ]
+  indexTZ(temp2) <- 'EST5EDT'
+  if(save) saveRDS(temp2, paste0(filename,'.updated.rds'))
+  gc()
+  return(invisible(temp2))
 }
 
