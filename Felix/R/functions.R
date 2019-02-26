@@ -693,5 +693,13 @@ ret_intraday <- function(x, y=c(9,35,15,55)) {
   return(final)
 }
 
+### 2019
+sourceDir <- function(path, trace = TRUE, ...) {
+  for (nm in list.files(path, pattern = "[.][RrSsQq]$")) {
+    if(trace) cat(nm,":")
+    source(file.path(path, nm), ...)
+    if(trace) cat("\n")
+  }
+}
 
 

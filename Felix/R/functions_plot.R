@@ -80,14 +80,16 @@ plotribbongg <- function(x, main=NULL, col='black', ribbon='red') {
 }
 
 plotzoo <- function(x, main='', col='black', legend='false', cex.legend = 0.8,
-                        xaxt='t', lty=NULL, lwd=NULL, plot.type = 'single', save='', ...) { 
+                        xaxt='t', lty=NULL, lwd=NULL, plot.type = 'single', save='', mtext=NULL, ...) { 
   if(is.null(lty)) lty <- rep(1, ncol(x))
   if(is.null(lwd)) lwd <- rep(1, ncol(x))
   plot.zoo(x, col=col, main=main, xaxt=xaxt, plot.type = plot.type, lty=lty, lwd=lwd, xlab='', ylab='', ...)
+  mtext(mtext)
   if(legend!='false') legend(legend,colnames(x),lty=1,col=col, cex=cex.legend) 
   if(save!='') { 
     pdf(save)
     plot.zoo(x, col=col, main=main, xaxt=xaxt, plot.type = plot.type, lty=lty, lwd=lwd, xlab='', ylab='', ...)
+    mtext(mtext)
     if(legend!='false') legend(legend,colnames(x),lty=1,col=col, cex=cex.legend) 
     dev.off() 
   }
