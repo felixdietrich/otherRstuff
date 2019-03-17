@@ -7,3 +7,4 @@ Author: Felix
 Maintainer: Felix Dietrich <felix.dietrich@mac.com>
 Description: General Helper Functions
 License: License to kill
+Depends: xts

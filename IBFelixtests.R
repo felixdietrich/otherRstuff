@@ -5,7 +5,7 @@ getwd()
 build('IBFelix', binary = FALSE)
 build('Felix', binary = FALSE)
 install.packages("~/Documents/IBFelix_1.0.tar.gz", repos = NULL, type = "source")
-install.packages("~/Documents/Felix_1.0.tar.gz", repos = NULL, type = "source")
+install.packages("~/Dropbox/otherRstuff/Felix_1.0.tar.gz", repos = NULL, type = "source")
 require(Felix)
 require(IBFelix)
 counter
