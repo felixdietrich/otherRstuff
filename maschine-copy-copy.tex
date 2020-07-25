@@ -1,0 +1,417 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Beamer Presentation
+% LaTeX Template
+% Version 1.0 (10/11/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass{beamer}
+
+\mode<presentation> {
+
+% The Beamer class comes with a number of default slide themes
+% which change the colors and layouts of slides. Below this is a list
+% of all the themes, uncomment each in turn to see what they look like.
+
+%\usetheme{default}
+%\usetheme{AnnArbor} % gelb blau
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley} % big header and left inhalt
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS} %greyred sehr strukturiert
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden} % doppelte titel
+%\usetheme{Frankfurt} % waagerecht inhalt oben
+%\usetheme{Goettingen} % rechts inhalt
+%\usetheme{Hannover} % links inhalt
+%\usetheme{Ilmenau} % waagerecht inhalt oben
+%\usetheme{JuanLesPins} % inhalt oben
+%\usetheme{Luebeck} % voll inhalt oben
+\usetheme{Madrid} % MEINS
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore} % weiss blau verlauf und schlicht
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+% As well as themes, the Beamer class has a number of color themes
+% for any slide theme. Uncomment each of these in turn to see how it
+% changes the colors of your current slide theme.
+
+%\usecolortheme{beaver} %greyred
+%\usecolortheme{lily} % sehr plain
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale} % standard
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+% voellig atheoretisch nur statistisch oder empirisch
+
+% Chrilly points:
+% viel reserach ist ja fragmentiert. man weiss nur bruchteil aber nie einen vergleich
+% manchmal: warum? z.b. wozu 30 jahre interest rates modellieren? vasicek? ist doch klar dass mal hoch mal niedrig
+
+\title[Maschine]{"Maschine"} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author{Felix Dietrich} 
+\institute[HSG] 
+{
+Maschinenraum of University of St.Gallen \\ 
+\medskip
+\textit{felix.dietrich@unisg.ch} 
+}
+\date{\today} 
+
+\begin{document}
+
+\begin{frame}
+\titlepage % Print the title page as the first slide
+\end{frame}
+
+\begin{frame}
+\frametitle{Overview} % Table of contents slide, comment this block out to remove it
+\tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+\end{frame}
+
+
+%------------------------------------------------
+\section{Motivation} 
+\begin{frame}
+\frametitle{Motivation}
+\begin{itemize}
+\item Interactive Brokers trading
+\item Scaling in/out in futures: short GC, CL, and even ES
+\item Like martingale in "Roulette", but:
+\item Intraday volatility?
+\item Trying to approach this scientifically...
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Motivation}
+found it?
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{1.png}
+\end{figure}
+\end{frame}
+
+\section{Was ist die Maschine?} 
+
+\begin{frame}
+\frametitle{Was ist die Maschine?}
+A combination of:
+\begin{enumerate}
+\item Low transaction costs
+\item Automatic (high-frequency) martingale limit-orders
+\begin{itemize}
+\item We show that the slightest mean reversion yields positive expected profit (Chakraborty and Kearns, 2011), 
+\end{itemize}
+\item Intraday Volatility
+\item Mean-reversion, or pairs trading
+\end{enumerate}
+\end{frame}
+
+%%% REVIEW
+
+\subsection{Where?} 
+
+%%% WO TRADED DIE MASCHINE
+\begin{frame}
+\frametitle{Where, obviously?}
+\begin{itemize}
+\item Calendar Spreads in commodities (!)
+\item ETFs, like in "Statistical arbitrage in the US equities market"
+\item International ETFs
+\item ETFs and individual constituents
+\item VIX futures
+\item Currencies
+\end{itemize}
+\end{frame}
+
+\subsection{Systematic concept} 
+
+% how to find pairs
+% BASICS OF STATISTICAL MEAN REVERSION TESTING - PART II
+% However, neither of these tests will actually help us determine , the hedging ratio needed to form the linear combination, they will only tell us whether, for a particular , the linear combination is stationary.
+% This is where the Cointegrated Augmented Dickey-Fuller (CADF) test comes in. It determines the optimal hedge ratio by performing a linear regression against the two time series and then tests for stationarity under the linear combination
+
+\begin{frame}
+\frametitle{Systematic concept}
+\begin{itemize}
+\item Searching for markets with high intraday volatility. Or high intraday volatility scaled by 1-month volatility (\textbf{variance ratios})
+%Suchen von Märkten, die eine hohe Intraday (oder daily) Volatilität im Verhältnis zur 1m Volatilität haben; "Variance-Ratios"
+\item A new concepts of mean reversion: 
+\begin{itemize}
+\item Less focus on return to mean, more focus on "bounds" of the process and high volatility (enough fluctuations to generate small profits). 
+\item Check mean-reversion "half-life" for the respective markets to calibrate:
+\end{itemize}
+\item Optimale holding period: 
+\begin{itemize}
+\item CL very short (days-weeks)
+\item VIX medium
+\item Currencies medium-long term (3 months)
+\end{itemize}
+\item Betsize: see Slide 11
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\section{Some specific examples}
+
+\begin{frame}
+\frametitle{Not all calendar spreads are similar...}
+
+\begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
+\column{.5\textwidth} % Left column and width
+\begin{figure}
+\includegraphics[width=0.85\linewidth]{1.png}
+\end{figure}
+\begin{figure}
+\includegraphics[width=0.85\linewidth]{2.png}
+\end{figure}
+\column{.5\textwidth} 
+\begin{figure}
+\includegraphics[width=0.85\linewidth]{3.png}
+\end{figure}
+
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Finding markets}
+
+Same mean, st.dev., skew - but different realized volatility
+
+\begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
+\column{.4\textwidth} % Left column and width
+\begin{example}[Process 1]
+{\tiny c(1,1,3,3,2,2,4,4,5,5,7,7,6,6,8,8,10,10,9,9)}
+\end{example}
+\column{.5\textwidth} 
+\begin{figure}
+\includegraphics[width=0.85\linewidth]{p1.png}
+\end{figure}
+\end{columns}
+\begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
+\column{.4\textwidth} % Left column and width
+\begin{example}[Process 2]
+{\tiny c(1,3,1,3,2,4,2,4,5,7,5,7,6,8,6,8,10,9,10,9)}
+\end{example}
+\column{.5\textwidth} 
+\begin{figure}
+\includegraphics[width=0.85\linewidth]{p2.png}
+\end{figure}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Finding intervals}
+\begin{small}
+EURUSD now at $\mathbf{1.08}$ \\
+at EURUSD $\mathbf{1.0850}$ we want to be 100.000 short \\
+EURUSD moves from $\mathbf{1.08}$ to $\mathbf{1.0850}$ and back to $\mathbf{1.08}$ \\
+\begin{table}
+\begin{tabular}{l l l l l}
+\toprule
+\textbf{EURUSD} & \multicolumn{2}{l}{Case 1} & \multicolumn{2}{l}{Case 2} \\
+\midrule
+1.0850 & bet 50.000 & - & bet 100.000 & - \\
+1.0825 & bet 50.000 & 125 & - & - \\
+1.0800 & - & 125 & - & 500 \\
+\bottomrule
+& & \textbf{250} & & \textbf{500} \\
+\end{tabular}
+%\caption{Table caption}
+\end{table}
+\begin{itemize}
+\item In Case 1, EURUSD has to fluctuate twice as much "between intervals".
+\item Empirically, this is not the case. \emph{Small} steps are not optimal.
+\item How can we know {\scriptsize (if not by testing and characterizing each market)}? 
+\end{itemize}
+\end{small}
+\end{frame}
+
+
+%------------------------------------------------
+\section{Sparse but promising literature}
+
+\begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
+\frametitle{Literature}
+\begin{small}
+
+\begin{itemize}
+\item Our results show that \textbf{Sharpe Ratios in excess of 2} are obtained with almost all WTI Crude Oil and Natural Gas combinations, while significant results for Gasoline and Heating Oil futures are achieved mainly by using shorter Moving Average periods and by \textbf{trading front-month and second- or third-month futures} \cite{p3} 
+
+\item The average out-of-sample information ratios for the best fifty ETFs and shares are 2.93 and 0.46, respectively \cite{p6} 
+
+\item Thus, possible \textbf{further studies} could concentrate on pairs trading investigation with \textbf{intraday data}. This could still widen the picture of hedge funds’ profitability as they are high frequency trading. - Annualized Sharpe Ratio 3.55 \cite{p9}
+
+\item We found sources of potential alpha in the arena characterized by holding periods
+between what we called the typical "\textbf{ultra high frequency}" environment and traditional
+statistical arbitrage environment. - a Sharpe Ratio of 7 \cite{p8} 
+
+\end{itemize}
+
+\end{small}
+\end{frame}
+
+%------------------------------------------------
+\section{Interpretation and open questions}
+
+\begin{frame}
+\frametitle{What are we doing from a system's perspective?}
+\begin{itemize}
+\item we are not competing against other people's speed (like HFTs) 
+\item we take inventory risk, effectively like a market maker
+% The HFT revenue decomposition is particularly useful to distinguish two contrasting common views on HFT: a friendly view that considers HFT as the new market makers and a hostile view that claims HFT is aggressively picking off other investors’ quotes.
+% Market making and order flow mechanisms in index futures markets differ from other securities markets through an absence of designated marketmakers and negligible private information and agency market power. (FT-SE 100 paper)
+\item maybe there is a premium to be harvested for this, as
+\begin{itemize}
+\item banks have less capability (regulation)
+\item hedge funds want different use for their capital
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Next steps}
+Intraday data limited. Simulate intraday process based on daily OHLC data
+\begin{figure}
+\includegraphics[width=0.5\linewidth]{intraday.png}
+\end{figure}
+Brownian bridge?
+\href{http://quant.stackexchange.com/questions/2567/how-to-create-a-stochastic-process-through-pre-specified-points}{http://quant.stackexchange.com/questions/2567/how-to-create-a-stochastic-process-through-pre-specified-points}
+\end{frame}
+
+\begin{frame}
+\frametitle{Critical open questions}
+%%% AUCH OIL ETF der immer faellt VS LONG OIL ETF STOCK
+\begin{itemize}
+\item Intraday data limited. Simulate intraday process on daily data
+\item Optimal leverage Vince, optimal betting size: develop for mean-reversion
+\item Compare high-frequency "martingale" against other mean-reversion models:
+\begin{itemize}
+\item TAR model \cite{p7}
+\item STAR model \cite{p5}
+\end{itemize}
+\item Do martingale strategies pick up pennies in front of a steamroller when
+\begin{itemize}
+\item volatility rises
+\item futures curve changes in slope (is the performance different from the standard carry factor when in contango)
+\end{itemize} 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{New}
+GLD GDX
+% Do & Faff – “Does Naïve Pairs Trading Still work?” (2010) 
+% = an increased risk of non-convergence
+https://www.math.nyu.edu/faculty/avellane/Lecture5Quant.pdf
+\end{frame}
+
+%%%%%%%%%%
+
+\begin{frame}
+\frametitle{References}
+\tiny{
+\begin{thebibliography}{99} % Beamer does not support BibTeX so references must be inserted manually as below
+\bibitem[Schizas, 2011]{p1} P. Schizas, D. Thomakos, T. Wang (2011)
+\newblock Pairs Trading on International ETFs
+%\newblock \emph{Journal Name} 12(3), 45 -- 678.
+\bibitem[Gatev, 2006]{p2} E. Gatev, W. Goetzmann, K. Rouwenhorst (2006)
+\newblock Pairs Trading: Performance of a Relative-Value Arbitrage Rule
+\bibitem[Lubnau, 2015]{p3} T. Lubnau, N. Todorova (2015)
+\newblock Trading on mean-reversion in energy futures markets 
+\bibitem[Lubnau, 2014]{p4} T. Lubnau (2014)
+\newblock Spread trading strategies in the crude oil futures market
+\bibitem[Monoyios, 2001]{p5} M. Monoyios, L. Sarno (2001)
+\newblock Mean Reversion in Stock Index Futures Markets: A nonlinear Analysis 
+\bibitem[Rudy, 2010]{p6} J. Rudy, C. Dunis, J. Laws (2010)
+\newblock Profitable Pair Trading: A Comparison Using the SP 100 Constituent Stocks and the 100 Most Liquid ETFs
+\bibitem[Martens, 1998]{p7} M. Martens, P. Kofman, T. Vorst (1998)
+\newblock A Threshold Error-Correction Model for Intraday Futures and Index Returns
+\bibitem[Infantino, 2010]{p8} L. Infantino, S. Itzhaki (2010)
+\newblock Developing High-Frequency Equities Trading Models (Advisor: Roy E. Welsch)
+\bibitem[Sipilae, 2013]{p9} M. Sipilae (2013)
+\newblock Algorithmic pairs trading: Empirical Investigation of Exchange Traded Funds
+
+
+\end{thebibliography}
+}
+\end{frame}
+
+%\begin{frame}
+%\Huge{\centerline{The End}}
+%\end{frame}
+
+\end{document} 
+
+
+%% OTHER ------------------------------------------------
+%\begin{frame}
+%\frametitle{Blocks of Highlighted Text}
+%\begin{block}{Block 1}
+%Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lectus nisl, ultricies in feugiat rutrum, porttitor sit amet augue. Aliquam ut tortor mauris. Sed volutpat ante purus, quis accumsan dolor.
+%\end{block}
+%
+%\begin{block}{Block 2}
+%Pellentesque sed tellus purus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum quis magna at risus dictum tempor eu vitae velit.
+%\end{block}
+%\end{frame}
+%
+%\begin{frame}
+%\frametitle{Theorem}
+%\begin{theorem}[Mass--energy equivalence]
+%$E = mc^2$
+%\end{theorem}
+%\end{frame}
+%
+%%------------------------------------------------
+%
+%\begin{frame}
+%\frametitle{Table}
+%\begin{table}
+%\begin{tabular}{l l l}
+%\toprule
+%\textbf{Treatments} & \textbf{Response 1} & \textbf{Response 2}\\
+%\midrule
+%Treatment 1 & 0.0003262 & 0.562 \\
+%Treatment 2 & 0.0015681 & 0.910 \\
+%Treatment 3 & 0.0009271 & 0.296 \\
+%\bottomrule
+%\end{tabular}
+%\caption{Table caption}
+%\end{table}
+%\end{frame}
